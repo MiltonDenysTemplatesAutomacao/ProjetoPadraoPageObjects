@@ -7,6 +7,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -31,11 +34,6 @@ public class BasePage {
         WebElement table = DriverFactory.getDriver().findElement(by);
         return table.findElements(By.tagName(tag));
     }
-    public static void scrollToElement(By by) throws Exception {
-        JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
-        WebElement element = DriverFactory.getDriver().findElement(by);
-        js.executeScript("arguments[0].scrollIntoView();", element);
-    }
     public static String getText(By by) throws Exception {
         return DriverFactory.getDriver().findElement(by).getText();
     }
@@ -57,5 +55,83 @@ public class BasePage {
     public static void waitUntilElementToBeSelected(By by, int time) throws Exception {
         WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), time);
         wait.until(ExpectedConditions.elementToBeClickable(by));
+    }
+    /*
+     * Method to wait until a specific element by id appears
+     */
+    public static void waitElementBy(By by, int time) throws Exception {
+        WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), time);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+    }
+
+    public static void waitUntilElementPresence(By by, int time) throws Exception {
+        WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), time);
+        wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    public static int wait(int miliseconds) {
+        try {
+            Thread.sleep(miliseconds);
+        } catch (Exception e) {
+            System.err.println("Fail while trying to use wait method");
+        }
+        return miliseconds;
+    }
+    public static boolean checkBoxIsActive(By by) throws Exception {
+        return DriverFactory.getDriver().findElement(by).isSelected();
+    }
+    public static boolean verifyIfElementsIsVisible(By by)throws Exception{
+        Boolean isPresent = DriverFactory.getDriver().findElements(by).size() > 0;
+        return isPresent;
+    }
+    /*
+     * Method to save elements in a list
+     */
+    public static List<WebElement> findElements(By by) throws Exception {
+        return DriverFactory.getDriver().findElements(by);
+    }
+    public static void clearField(By by) throws Exception {
+        DriverFactory.getDriver().findElement(by).clear();
+    }
+    public static void switchToIFrame(String id)throws Exception{
+        DriverFactory.getDriver().switchTo().frame(id);
+    }
+    public static void switchToDefaultContent()throws Exception{
+        DriverFactory.getDriver().switchTo().defaultContent();
+    }
+    /*
+     * Method to get current date time from America/New_York
+     */
+    public static String currentDateTime(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("America/New_York"));
+        return dtf.format(now);
+    }
+    public static String currentDateTimeWithoutHour(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("America/New_York"));
+        return dtf.format(now);
+    }
+
+    /*
+     * Method to scroll until element is visible
+     */
+    public static void scrollToElement(By by) throws Exception {
+        JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
+        WebElement element = DriverFactory.getDriver().findElement(by);
+        js.executeScript("arguments[0].scrollIntoView();", element);
+    }
+    public static void scrollTo(String pixels) throws Exception {
+        JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
+        js.executeScript("window.scrollBy(0,"+pixels+")", "");
+    }
+
+    public static void scrollToTheBottom() throws Exception {
+        JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+    }
+    public static void scrollToTheTop() throws Exception {
+        JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
+        js.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
     }
 }
