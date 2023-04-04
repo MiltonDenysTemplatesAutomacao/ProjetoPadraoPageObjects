@@ -24,7 +24,7 @@ public class DriverFactory {
                 }
                 driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
                 driver.manage().window().maximize();
-                driver.get("url");
+                driver.get("https://www.zoom.com.br");
             }
         }catch(Exception e){
         }
